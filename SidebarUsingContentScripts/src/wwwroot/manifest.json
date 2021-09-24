@@ -1,0 +1,19 @@
+﻿{
+  "manifest_version": 2,
+  "name": "Sidebar Using ContentScripts",
+  "description": "Sample for sidebar using content scripts.",
+  "version": "0.1",
+  "content_security_policy": "script-src 'self' 'unsafe-eval' 'wasm-eval' 'sha256-v8v3RKRPmN4odZ1CWM5gw80QKPCCWMcpNeOmimNL2AA='; object-src 'self'",
+  "content_scripts": [
+    {
+      "matches": [ "*://*/*" ],
+      "js": [ "content/Blazor.BrowserExtension/ContentScript.js" ],
+      "css": [ "SidebarUsingContentScripts.styles.css" ]
+    }
+  ],
+  "web_accessible_resources": [
+    "framework/*",
+    "content/*",
+    "app.js"
+  ]
+}

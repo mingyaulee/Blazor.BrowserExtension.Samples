@@ -4,6 +4,11 @@ This repository contains samples of browser extensions built with Blazor using [
 
 Each directory contains the source file in `src` and the published files in `dist`.
 
+## Samples
+
+### Sidebar using content scripts
+![Sidebar Demo](SidebarUsingContentScripts/Demo.gif)
+
 ## Test the sample projects
 You can compile and load the projects yourself or just load the published files directly in the browser.
 
