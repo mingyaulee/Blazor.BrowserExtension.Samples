@@ -6,6 +6,9 @@ Each directory contains the source file in `src` and the published files in `dis
 
 ## Samples
 
+### New tab page
+![New Tab Page Demo](NewTabPage/Demo.gif)
+
 ### Sidebar using content scripts
 ![Sidebar Demo](SidebarUsingContentScripts/Demo.gif)
 
