@@ -8,9 +8,12 @@ Each directory contains the source file in `src` and the published files in `dis
 
 ### New tab page
 ![New Tab Page Demo](NewTabPage/Demo.gif)
+- Bookmarks API
+- Override default new tab page
 
 ### Sidebar using content scripts
 ![Sidebar Demo](SidebarUsingContentScripts/Demo.gif)
+- Content scripts
 
 ## Test the sample projects
 You can compile and load the projects yourself or just load the published files directly in the browser.

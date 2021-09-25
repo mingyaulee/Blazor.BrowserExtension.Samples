@@ -10,5 +10,8 @@
   "web_accessible_resources": [
     "framework/*",
     "content/*"
+  ],
+  "permissions": [
+    "bookmarks"
   ]
 }

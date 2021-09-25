@@ -1,15 +1,65 @@
 ﻿@page "/newtab.html"
+@using WebExtensions.Net.Bookmarks
 @inherits Blazor.BrowserExtension.Pages.BasePage
 
-    <section class="hero is-success is-fullheight">
-        <div class="hero-body">
-            <div class="container has-text-centered">
-                <h1 class="title">
-                    Blazor
-                </h1>
+<section class="hero is-success is-fullheight">
+    <div class="hero-body">
+        <div class="container has-text-centered">
+            <h1 class="title">
+                My Bookmarks
+            </h1>
+            @if (bookmarks is null || !bookmarks.Any())
+            {
                 <h2 class="subtitle">
-                    New tab page sample
+                    There is no bookmark yet.
                 </h2>
-            </div>
+            }
+            else
+            {
+                foreach (BookmarkTreeNode bookmark in bookmarks)
+                {
+                    <div class="card mb-3">
+                        <a href="@(bookmark.Url)">
+                            <div class="card-content">
+                                <p>@(bookmark.Title)</p>
+                            </div>
+                        </a>
+                    </div>
+                }
+            }
         </div>
-    </section>
+    </div>
+</section>
+
+@code {
+    private IEnumerable<BookmarkTreeNode> bookmarks;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        var root = await WebExtensions.Bookmarks.GetTree();
+        var nodes = new List<BookmarkTreeNode>();
+        FlattenBookmarkTree(nodes, root?.FirstOrDefault());
+        bookmarks = nodes;
+    }
+
+    private void FlattenBookmarkTree(List<BookmarkTreeNode> nodes, BookmarkTreeNode node)
+    {
+        if (node is null)
+        {
+            return;
+        }
+
+        if (node.Children is not null && node.Children.Any())
+        {
+            foreach (var childNode in node.Children)
+            {
+                FlattenBookmarkTree(nodes, childNode);
+            }
+        }
+        else if (!string.IsNullOrEmpty(node.Url))
+        {
+            nodes.Add(node);
+        }
+    }
+}
