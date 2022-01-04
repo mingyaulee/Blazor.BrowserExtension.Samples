@@ -21,12 +21,12 @@ You can compile and load the projects yourself or just load the published files 
 ### Google Chrome
 1. Launch the Extensions page ( ⋮ → More tools → Extensions) or navigate to the URL [chrome://extensions/](chrome://extensions/).
 2. Switch on `Developer mode`.
-3. Click on the `Load unpacked` button, then navigate to `sampleproject\dist` and select the foler `browserextension`.
+3. Click on the `Load unpacked` button, then navigate to `sampleproject\dist` and select the folder `browserextension`.
 
 ### Microsoft Edge
 1. Launch the Extensions page ( ⋮ → Extensions) or navigate to the URL [edge://extensions/](edge://extensions/).
 2. Click on the ☰ and switch on `Developer mode`.
-3. Click on the button with the title `Load unpacked`, then navigate to `sampleproject\dist` and select the foler `browserextension`.
+3. Click on the button with the title `Load unpacked`, then navigate to `sampleproject\dist` and select the folder `browserextension`.
 
 ### Mozilla Firefox
 1. Navigate to the URL [about:debugging#/runtime/this-firefox](about:debugging#/runtime/this-firefox).
