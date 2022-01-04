@@ -53,6 +53,24 @@
 
   const AccessPaths = new AccessPathsClass();
 
+  class GuidClass {
+    /**
+     * Generate a new GUID.
+     * @returns {string}
+     */
+    newGuid() {
+      if (globalThis.crypto.randomUUID) {
+        return globalThis.crypto.randomUUID();
+      }
+
+      return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+        (c ^ globalThis.crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+      );
+    }
+  }
+
+  const Guid = new GuidClass();
+
   class JsBindError extends Error {
     /**
      * Creates a new instance of JsBindError.
@@ -125,6 +143,22 @@
         this._objectReferencesCount++;
       }
       this._objectReferences[referenceId] = objectReference;
+    }
+
+    /**
+     * Gets an object reference from the reference identifier.
+     * @param {string} referenceId The object reference identifier.
+     */
+    getObjectReference(referenceId) {
+      return this._objectReferences[referenceId];
+    }
+
+    /**
+     * Checks if an object reference is stored.
+     * @param {string} referenceId The object reference identifier.
+     */
+    containsObjectReference(referenceId) {
+      return this._objectReferences[referenceId] !== null && typeof this._objectReferences[referenceId] !== "undefined";
     }
 
     /**
@@ -430,7 +464,7 @@
      */
     _processInvokeArgs(invokeArgs) {
       const bindings = this.delegateReference.argumentBindings;
-      if (!invokeArgs || !invokeArgs.length || !bindings.length) {
+      if (!invokeArgs || !invokeArgs.length || !bindings || !bindings.length) {
         return invokeArgs;
       }
 
@@ -438,7 +472,11 @@
         let invokeArgAccessPath = null;
 
         if (this.delegateReference.storeArgumentsAsReferences[index]) {
-          const referenceId = this.delegateReference.argumentsReferenceIds[index];
+          let referenceId = this.delegateReference.argumentsReferenceIds[index];
+          if (JsObjectHandler.containsObjectReference(referenceId) && JsObjectHandler.getObjectReference(referenceId) !== invokeArg) {
+            referenceId = Guid.newGuid();
+          }
+
           invokeArgAccessPath = AccessPaths.fromReferenceId(referenceId);
           JsObjectHandler.addObjectReference(referenceId, invokeArg);
         }
@@ -597,6 +635,91 @@
   const DelegateReferenceReviver = new DelegateReferenceReviverClass();
 
   /**
+   * Checks if a value is a ObjectBindingConfiguration.
+   * @param {any} value
+   * @returns {value is ObjectBindingConfiguration}
+   */
+  function IsObjectBindingConfiguration(value) {
+    return value &&
+      typeof value === "object" &&
+      /** @type {ObjectBindingConfiguration} */(value).__isObjectBindingConfiguration === true;
+  }
+
+  /**
+   * @typedef {import("../InvokeOptions/ObjectBindingConfiguration.js").default} ObjectBindingConfiguration
+   */
+
+  /**
+   * @callback FoundBindingCallback
+   * @param {ObjectBindingConfiguration} binding
+   */
+
+  class ObjectBindingConfigurationReviverClass {
+    constructor() {
+      /** @type {Object<string, ObjectBindingConfiguration>} */
+      this.references = {};
+      /** @type {Object<string, FoundBindingCallback[]>} */
+      this.referenceCallbacks = {};
+    }
+
+    /**
+     * Revives reference binding configuration.
+     * @param {any} key
+     * @param {any} value
+     */
+    revive(key, value) {
+      if (IsObjectBindingConfiguration(value)) {
+        if (value.id) {
+          this.foundObject(value);
+        } else if (value.referenceId) {
+          this.trackReference(value);
+        }
+      }
+
+      return value;
+    }
+
+    /**
+     * Called when an object with id is found.
+     * @param {ObjectBindingConfiguration} obj 
+     */
+    foundObject(obj) {
+      this.references[obj.id] = obj;
+      if (this.referenceCallbacks.hasOwnProperty(obj.id)) {
+        this.referenceCallbacks[obj.id].forEach(callback => callback(obj));
+        this.referenceCallbacks[obj.id] = [];
+        try {
+          delete this.referenceCallbacks[obj.id];
+        } catch { }
+      }
+    }
+
+    /**
+     * Track a reference object with reference id to be initialized when the referenced object is found.
+     * @param {any} referenceObject 
+     */
+    trackReference(referenceObject) {
+      const foundBinding = (/** @type {ObjectBindingConfiguration} */ binding) => {
+        referenceObject.include = binding.include;
+        referenceObject.exclude = binding.exclude;
+        referenceObject.propertyBindings = binding.propertyBindings;
+        referenceObject.isBindingBase = binding.isBindingBase;
+        referenceObject.arrayItemBinding = binding.arrayItemBinding;
+      };
+      if (this.references.hasOwnProperty(referenceObject.referenceId)) {
+        foundBinding(this.references[referenceObject.referenceId]);
+      } else {
+        if (!this.referenceCallbacks.hasOwnProperty(referenceObject.referenceId)) {
+          this.referenceCallbacks[referenceObject.referenceId] = [];
+        }
+        this.referenceCallbacks[referenceObject.referenceId].push(foundBinding);
+      }
+    }
+  }
+
+  const ObjectBindingConfigurationReviver = new ObjectBindingConfigurationReviverClass();
+
+  /**
    * Checks if a value is an ObjectReference.
    * @param {any} value
    * @returns {value is ObjectReference}
@@ -638,8 +761,9 @@
       setTimeout(attachDotNetRevivers, 10);
       return;
     }
-    globalThis.DotNet.attachReviver(DelegateReferenceReviver.revive);
-    globalThis.DotNet.attachReviver(ObjectReferenceReviver.revive);
+    globalThis.DotNet.attachReviver(DelegateReferenceReviver.revive.bind(DelegateReferenceReviver));
+    globalThis.DotNet.attachReviver(ObjectBindingConfigurationReviver.revive.bind(ObjectBindingConfigurationReviver));
+    globalThis.DotNet.attachReviver(ObjectReferenceReviver.revive.bind(ObjectReferenceReviver));
   }
 
   class JsBindNet {
