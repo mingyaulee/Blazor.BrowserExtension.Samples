@@ -623,7 +623,7 @@
      * @param {any} key
      * @param {any} value
      */
-    revive(key, value) {
+    revive(_key, value) {
       if (IsDelegateReference(value)) {
         return DelegateReferenceHandler.getOrCreateDelegateProxy(value).proxyFunction;
       }
@@ -667,7 +667,7 @@
      * @param {any} key
      * @param {any} value
      */
-    revive(key, value) {
+    revive(_key, value) {
       if (IsObjectBindingConfiguration(value)) {
         if (value.id) {
           this.foundObject(value);
@@ -734,7 +734,7 @@
      * @param {any} key
      * @param {any} value
      */
-    revive(key, value) {
+    revive(_key, value) {
       if (IsObjectReference(value)) {
         return JsObjectHandler.getObjectFromAccessPath(value.accessPath);
       }
@@ -972,4 +972,4 @@
 
   globalThis.JsBindNet = new JsBindNet();
 
-}());
+})();
