@@ -7,7 +7,7 @@
   "linkerEnabled": true,
   "resources": {
     "assembly": {
-      "Blazor.BrowserExtension.dll": "sha256-6F5LkwSvcmXf7Y+4KDQ2BcKjvo5Q+QC2gNafOJ\/oagI=",
+      "Blazor.BrowserExtension.dll": "sha256-6gXNcUNDzIonepqS1nWlvGuPCBtvPtDKClOK\/WtecB4=",
       "JsBind.Net.dll": "sha256-pIMfl9H4TMDlBPHEv51qUspdXvKg6r3aJH9qtw183k4=",
       "JsBind.Net.Extensions.DependencyInjection.dll": "sha256-mRDlp+jEN8FjeCqyS5wMNKrGLDjtFzLn7w8pnRdHqB4=",
       "Microsoft.AspNetCore.Components.dll": "sha256-1G+cVcszQnw6heK9Ali5O5Y3854WeGN935gk4xvICgE=",
@@ -27,7 +27,7 @@
       "Microsoft.JSInterop.WebAssembly.dll": "sha256-yiWrS4VfEHP4LPvS0uhn+6mO2H5n16SgNrjd7m4VwGg=",
       "Microsoft.Net.Http.Headers.dll": "sha256-P66ftDrXwc6ayND8uYzIk0CPQy1GjNZAPHx9RMhi3V4=",
       "netstandard.dll": "sha256-5A\/Yw6K4irMzRAXfEdKtdfKT0vdoYBg7ifccHoyjBfo=",
-      "SidebarUsingContentScripts.dll": "sha256-M17VrTavgn674gTcNE6mshv+ZzLJMwCvDDzsBqX\/OCs=",
+      "SidebarUsingContentScripts.dll": "sha256-YBnFU5bma4564p+jAnCgv6vBcDNSPdkkMKPEKmUNei0=",
       "System.Buffers.dll": "sha256-hvk5eIoZMl6vl+jTcT\/nZ8MsafB4XingGXggimsWPlc=",
       "System.Collections.Concurrent.dll": "sha256-Qo8yRDc5\/DPVHP0Bg6pFjyKcbb76+9OoQz4\/\/gsGud0=",
       "System.Collections.dll": "sha256-kCGvH0JxibcIxsBs3WkZKFgrHtvSpTPse8XVAilKcEw=",
