@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using System.Threading.Tasks;
 
 namespace NewTabPage
@@ -9,8 +9,11 @@ namespace NewTabPage
         public static async Task Main(string[] args)
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
-            builder.RootComponents.Add<App>("#NewTabPageApp");
-            builder.Services.AddBrowserExtensionServices();
+            builder.UseBrowserExtension(browserExtension =>
+            {
+                builder.RootComponents.Add<App>("#app");
+                builder.RootComponents.Add<HeadOutlet>("head::after");
+            });
             await builder.Build().RunAsync();
         }
     }

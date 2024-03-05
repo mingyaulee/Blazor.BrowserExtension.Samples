@@ -63,8 +63,8 @@
         return globalThis.crypto.randomUUID();
       }
 
-      return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
-        (c ^ globalThis.crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+      return (1e7.toString() + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+        (parseInt(c) ^ globalThis.crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> parseInt(c) / 4).toString(16)
       );
     }
   }
@@ -315,7 +315,7 @@
       return getArrayValueFromBinding(value, binding.arrayItemBinding, accessPath);
     }
 
-    const includeAllProperties = binding.include && binding.include.some(includeProperty => includeProperty === "*");
+    const includeAllProperties = binding.include?.some(includeProperty => includeProperty === "*");
     const excludeProperties = binding.exclude?.map(excludeProperty => excludeProperty.toUpperCase());
     const getPropertyBinding = (propertyName) => {
       return binding.propertyBindings?.[propertyName.toUpperCase()];
@@ -434,7 +434,7 @@
      */
     _invokeDelegateInternal(delegateId, invokeArgs) {
       const invokeResult = globalThis.DotNet.invokeMethod("JsBind.Net", "InvokeDelegateFromJs", delegateId, invokeArgs);
-      if (invokeResult && invokeResult.isError && invokeResult.errorMessage) {
+      if (invokeResult?.isError && invokeResult.errorMessage) {
         throw new JsBindError(invokeResult.errorMessage, invokeResult.stackTrace);
       }
 
@@ -451,7 +451,7 @@
       let invokeAsyncResult = await globalThis.DotNet.invokeMethodAsync("JsBind.Net", "InvokeDelegateFromJsAsync", delegateId, invokeArgs);
       let invokeResult = unwrapAsyncResult(invokeAsyncResult);
 
-      if (invokeResult && invokeResult.isError && invokeResult.errorMessage) {
+      if (invokeResult?.isError && invokeResult.errorMessage) {
         throw new JsBindError(invokeResult.errorMessage, invokeResult.stackTrace);
       }
 
@@ -464,7 +464,7 @@
      */
     _processInvokeArgs(invokeArgs) {
       const bindings = this.delegateReference.argumentBindings;
-      if (!invokeArgs || !invokeArgs.length || !bindings || !bindings.length) {
+      if (!invokeArgs?.length || !bindings?.length) {
         return invokeArgs;
       }
 
@@ -560,6 +560,15 @@
   const DelegateReferenceHandler = new DelegateReferenceHandlerClass();
 
   class InvokeResult {
+    /** @type {any} */
+    value;
+    /** @type {boolean} */
+    isError;
+    /** @type {string} */
+    errorMessage;
+    /** @type {string} */
+    stackTrace;
+
     /**
      * Creates a new instance of InvokeResult.
      * @param {any} value
@@ -578,6 +587,7 @@
   /**
    * @typedef {import("./ReferenceType.js").ReferenceTypeEnumValue} ReferenceTypeEnumValue
    */
+
 
   /**
    * Checks if a value is a ReferenceBase.
@@ -620,7 +630,7 @@
   class DelegateReferenceReviverClass {
     /**
      * Converts a DelegateReference JSON object to a proxy function.
-     * @param {any} key
+     * @param {any} _key
      * @param {any} value
      */
     revive(_key, value) {
@@ -664,7 +674,7 @@
 
     /**
      * Revives reference binding configuration.
-     * @param {any} key
+     * @param {any} _key
      * @param {any} value
      */
     revive(_key, value) {
@@ -731,7 +741,7 @@
   class ObjectReferenceReviverClass {
     /**
      * Converts an ObjectReference JSON object to an object.
-     * @param {any} key
+     * @param {any} _key
      * @param {any} value
      */
     revive(_key, value) {
