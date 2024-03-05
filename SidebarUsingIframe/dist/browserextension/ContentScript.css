@@ -1,0 +1,27 @@
+﻿[data-extension-app-id=abc] {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 25%;
+    min-width: 350px;
+    z-index: 2147483647;
+}
+
+    [data-extension-app-id=abc].hidden {
+        display: none;
+    }
+
+    [data-extension-app-id=abc].sidebar-collapsed {
+        overflow: visible;
+        height: 30px;
+        width: 50px;
+        min-width: 50px;
+        top: 40%;
+    }
+
+    [data-extension-app-id=abc] iframe {
+        width: 100%;
+        height: 100%;
+        border: 0;
+    }

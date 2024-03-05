@@ -16,6 +16,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SidebarUsingContentScripts"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewTabPage", "NewTabPage\src\NewTabPage.csproj", "{2BDBE08C-D78F-4280-A861-21DC02F8F3F2}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SidebarUsingIframe", "SidebarUsingIframe\src\SidebarUsingIframe.csproj", "{0B4B1200-CDA7-4CBA-92EB-5C8C7754B8B8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +32,10 @@ Global
 		{2BDBE08C-D78F-4280-A861-21DC02F8F3F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2BDBE08C-D78F-4280-A861-21DC02F8F3F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2BDBE08C-D78F-4280-A861-21DC02F8F3F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B4B1200-CDA7-4CBA-92EB-5C8C7754B8B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B4B1200-CDA7-4CBA-92EB-5C8C7754B8B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B4B1200-CDA7-4CBA-92EB-5C8C7754B8B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B4B1200-CDA7-4CBA-92EB-5C8C7754B8B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

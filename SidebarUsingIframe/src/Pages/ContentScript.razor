@@ -1,0 +1,83 @@
+﻿@page "/contentscript.html"
+@using SidebarUsingIframe.Messaging
+@inherits Blazor.BrowserExtension.Pages.BasePage
+@inject MessagingEvent MessagingEvent
+
+<div class="sidebar-container @(isCollapsed ? "collapsed" : "")">
+    <div class="content-container">
+        <div class="toggle" @onclick=Toggle>
+            Toggle
+        </div>
+        <div class="text-container">
+            <h1>My Sidebar</h1>
+            <p>This sidebar content is injected into the page using an iframe.</p>
+            <br />
+            @if (headersData is not null)
+            {
+                <p>This is a demo of communication with the content script using the window.postMessage API.</p>
+                <p>In this page these are the headers found:</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tag</th>
+                            <th>Title</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var headerData in headersData)
+                        {
+                            <tr>
+                                <td>@headerData.Tag</td>
+                                <td>@headerData.Text</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private bool isCollapsed = true;
+    private IEnumerable<HeadersData> headersData;
+
+    private void Toggle()
+    {
+        isCollapsed = !isCollapsed;
+        PostCollapseStateToContentScript();
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        PostCollapseStateToContentScript();
+        ListenToMessageFromContentScript();
+        PostDataRequestToContentScript();
+    }
+
+    private void PostCollapseStateToContentScript()
+    {
+        MessagingEvent.Post(new()
+        {
+            IsCollapsed = isCollapsed
+        });
+    }
+
+    private void ListenToMessageFromContentScript()
+    {
+        MessagingEvent.Listen((data) =>
+        {
+            headersData = data.HeadersData;
+            StateHasChanged();
+        });
+    }
+
+    private void PostDataRequestToContentScript()
+    {
+        MessagingEvent.Post(new()
+        {
+            RequestForData = true
+        });
+    }
+}

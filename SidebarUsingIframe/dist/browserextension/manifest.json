@@ -1,0 +1,27 @@
+﻿{
+  "manifest_version": 3,
+  "name": "Sidebar Using iframe",
+  "description": "Sample for sidebar using iframe.",
+  "version": "0.1",
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+  },
+  "content_scripts": [
+    {
+      "matches": [ "*://*/*" ],
+      "js": [ "ContentScript.js" ],
+      "css": [ "ContentScript.css" ]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "framework/*",
+        "content/*",
+        "ContentScript.js",
+        "contentscript.html"
+      ],
+      "matches": [ "<all_urls>" ]
+    }
+  ]
+}

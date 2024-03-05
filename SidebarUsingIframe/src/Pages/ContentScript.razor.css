@@ -1,0 +1,55 @@
+﻿.sidebar-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 300px;
+    background-color: #68ceff;
+    z-index: 999999999;
+    transition: left ease-out .4s;
+}
+
+    .sidebar-container.collapsed {
+        left: -300px;
+        transition: none;
+    }
+
+.content-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.toggle {
+    position: absolute;
+    width: 50px;
+    height: 30px;
+    right: -50px;
+    top: 40%;
+    box-sizing: border-box;
+    text-align: center;
+    background-color: #4285f4;
+    color: #fff;
+    cursor: pointer;
+    padding: 6px 4px;
+}
+
+.collapsed .toggle {
+    top: 0;
+}
+
+.text-container {
+    padding: 15px;
+    font-size: 16px;
+    overflow-y: auto;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.collapsed .text-container {
+    display: none;
+}
+
+h1 {
+    font-size: 3em;
+}

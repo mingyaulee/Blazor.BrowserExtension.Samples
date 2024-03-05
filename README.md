@@ -15,6 +15,11 @@ Each directory contains the source file in `src` and the published files in `dis
 ![Sidebar Demo](SidebarUsingContentScripts/Demo.gif)
 - Content scripts
 
+### Sidebar using content scripts and iframe
+![Sidebar Demo](SidebarUsingIframe/Demo.gif)
+- Content scripts
+- Messaging
+
 ## Test the sample projects
 You can compile and load the projects yourself or just load the published files directly in the browser.
 
