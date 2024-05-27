@@ -1,0 +1,38 @@
+﻿@page "/contentscript.html"
+@using System.Text.Json
+@using Messaging.Messages
+@using WebExtensions.Net.Runtime
+@inherits BasePage
+
+<div class="content-script-container">
+    <h1>My content script</h1>
+    <p>Open the popup by clicking on the extension icon above, next to the address bar</p>
+    <h2>Logs</h2>
+    @foreach (var log in logs)
+    {
+        <p>@log</p>
+    }
+</div>
+
+@code {
+    List<string> logs = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await WebExtensions.Runtime.OnMessage.AddListener(OnMessage);
+    }
+
+    private bool OnMessage(object message, MessageSender sender, Action<object> sendResponse)
+    {
+        if (Message.IsForTarget(MessageTarget.ContentScript, message, out var msg))
+        {
+            logs.Add("Received new message: " + msg.Content);
+            sendResponse("Message acknowledged from Content Script");
+            StateHasChanged();
+            return true;
+        }
+
+        return false;
+    }
+}

@@ -6,6 +6,11 @@ Each directory contains the source file in `src` and the published files in `dis
 
 ## Samples
 
+### Messaging
+![Messaging Demo](Messaging/Demo.gif)
+- Runtime Messaging API
+- Tabs Messaging API
+
 ### New tab page
 ![New Tab Page Demo](NewTabPage/Demo.gif)
 - Bookmarks API

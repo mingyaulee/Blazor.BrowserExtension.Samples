@@ -1,0 +1,40 @@
+﻿{
+  "manifest_version": 3,
+  "name": "Messaging Extension",
+  "description": "Sample for messaging in browser extension",
+  "version": "0.1",
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "BackgroundWorker.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": [ "*://*/*" ],
+      "js": [ "content/Blazor.BrowserExtension/ContentScript.js" ],
+      "css": [ "Messaging.styles.css" ]
+    }
+  ],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "framework/*",
+        "content/*",
+        "app.js"
+      ],
+      "matches": [ "<all_urls>" ]
+    }
+  ],
+  "permissions": [
+    "tabs"
+  ]
+}

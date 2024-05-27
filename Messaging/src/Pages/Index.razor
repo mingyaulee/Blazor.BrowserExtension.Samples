@@ -1,0 +1,59 @@
+﻿@page "/index.html"
+@using System.Text.Json
+@using Messaging.Messages
+@using WebExtensions.Net.Runtime
+@inherits IndexPage
+
+<h1>Messaging Demo</h1>
+<button class="btn-primary" @onclick="@OpenOptionsPageAndSendMessage">Open Options page and send Message</button>
+
+<p>You can also see the messaging with ContentScripts and PopUp by visiting a web page where the content script will be rendered, for example <a href="https://google.com" target="_blank">https://google.com</a></p>
+
+<h2>Logs</h2>
+@foreach (var log in logs)
+{
+    <p>@log</p>
+}
+
+@code {
+    List<string> logs = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await WebExtensions.Runtime.OnMessage.AddListener(OnMessage);
+    }
+
+    private bool OnMessage(object message, MessageSender sender, Action sendResponse)
+    {
+        if (Message.IsForTarget(MessageTarget.Index, message, out var msg))
+        {
+            logs.Add("Received new message: " + msg.Content);
+            StateHasChanged();
+            return true;
+        }
+
+        return false;
+    }
+
+    private async Task OpenOptionsPageAndSendMessage()
+    {
+        logs.Add("Sending message to background worker to open options page");
+        var openOptionsResponse = await WebExtensions.Runtime.SendMessage(new Message()
+        {
+            Target = MessageTarget.Background,
+            Content = "OPEN_OPTIONS_PAGE"
+        });
+        logs.Add("Received response from background: " + openOptionsResponse);
+
+        await Task.Delay(3000);
+
+        logs.Add("Sending message to options page");
+        var optionsPageResponse = await WebExtensions.Runtime.SendMessage(new Message()
+        {
+            Target = MessageTarget.Options,
+            Content = "Hello from Index page"
+        });
+        logs.Add("Received response from options page: " + optionsPageResponse);
+    }
+}

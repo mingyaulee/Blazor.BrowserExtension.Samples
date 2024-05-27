@@ -1,0 +1,11 @@
+/* /Pages/ContentScript.razor.rz.scp.css */
+.content-script-container[b-5t614019rp] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 320px;
+    background: #fff;
+    border-bottom: 1px solid #000;
+    z-index: 1000000;
+}

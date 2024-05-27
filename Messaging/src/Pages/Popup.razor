@@ -1,0 +1,58 @@
+﻿@page "/popup.html"
+@using System.Text.Json
+@using System.Linq
+@using Messaging.Messages
+@using WebExtensions.Net.Runtime
+@inherits BasePage
+
+<h1>My popup page</h1>
+@if (activeTabId is not null)
+{
+    <button class="btn-primary" @onclick="@SendMessage">Send message to content script</button>
+}
+
+<h2>Logs</h2>
+@foreach (var log in logs)
+{
+    <p>@log</p>
+}
+
+@code {
+    List<string> logs = new();
+    int? activeTabId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        activeTabId = (await WebExtensions.Tabs.Query(new()
+            {
+                Active = true,
+                CurrentWindow = true
+            })).SingleOrDefault()?.Id;
+        await WebExtensions.Runtime.OnMessage.AddListener(OnMessage);
+    }
+
+    private bool OnMessage(object message, MessageSender sender, Action<object> sendResponse)
+    {
+        if (Message.IsForTarget(MessageTarget.Popup, message, out var msg))
+        {
+            logs.Add("Received new message: " + msg.Content);
+            sendResponse("Message acknowledged from Popup page");
+            StateHasChanged();
+            return true;
+        }
+
+        return false;
+    }
+
+    private async Task SendMessage()
+    {
+        logs.Add("Sending message to content script");
+        var openOptionsResponse = await WebExtensions.Tabs.SendMessage(activeTabId.Value, new Message()
+        {
+            Target = MessageTarget.ContentScript,
+            Content = "Hello from Popup"
+        });
+        logs.Add("Received response from content script: " + openOptionsResponse);
+    }
+}

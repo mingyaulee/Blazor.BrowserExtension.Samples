@@ -1,0 +1,36 @@
+﻿@page "/options.html"
+@using System.Text.Json
+@using Messaging.Messages
+@using WebExtensions.Net.Runtime
+@inherits BasePage
+
+<h1>My options page</h1>
+<h2>Logs</h2>
+@foreach (var log in logs)
+{
+    <p>@log</p>
+}
+
+@code {
+    List<string> logs = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await WebExtensions.Runtime.OnMessage.AddListener(OnMessage);
+    }
+
+    private bool OnMessage(object message, MessageSender sender, Action<object> sendResponse)
+    {
+        if (Message.IsForTarget(MessageTarget.Options, message, out var msg))
+        {
+            logs.Add("Received new message: " + msg.Content);
+            sendResponse("Message acknowledged from Options page");
+            logs.Add("Go back to index page to see the full message logs");
+            StateHasChanged();
+            return true;
+        }
+
+        return false;
+    }
+}
