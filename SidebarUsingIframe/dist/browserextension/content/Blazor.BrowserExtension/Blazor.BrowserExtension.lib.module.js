@@ -25,20 +25,20 @@ async function beforeStart(options, extensions) {
 
   config = await configRequest.json();
 
-  const blazorBrowserExtension = options.IsContentScript ? options.BlazorBrowserExtension : initializeInternal(config, url, browserExtensionMode);
+  const blazorBrowserExtension = options.BlazorBrowserExtension ?? initializeInternal(config, url, browserExtensionMode);
 
   if (debugMode) {
     blazorBrowserExtension.ImportBrowserPolyfill = false;
   }
 
   if (config.HasAppJs) {
-    appJs = await import(`${url}app.js`);
+    appJs = await (globalThis.importProxy ?? (m => import(m)))(`${url}app.js`);
   }
 
   if (blazorBrowserExtension.ImportBrowserPolyfill) {
     // import browser extension API polyfill
     // @ts-ignore JS is not a module
-    await import('./lib/browser-polyfill.min.js');
+    await (globalThis.importProxy ?? (m => import(m)))('./lib/browser-polyfill.min.js');
   }
 
   await blazorBrowserExtension.BrowserExtension.InitializeCoreAsync(options);

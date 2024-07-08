@@ -1,5 +1,6 @@
 const BrowserExtensionModes = {
   Standard: "Standard",
+  Background: "Background",
   ContentScript: "ContentScript",
   Debug: "Debug"
 };
@@ -13,16 +14,16 @@ class BrowserExtension {
 
   async InitializeCoreAsync(blazorStartOptions) {
     // import JsBind.Net JS
-    await import(`${this.Url}content/JsBind.Net/JsBindNet.js`);
+    await (globalThis.importProxy ?? (m => import(m)))(`${this.Url}content/JsBind.Net/JsBindNet.js`);
 
     if (this.Config.CompressionEnabled) {
       // import brotli decode.js
-      this.BrotliDecode = (await import('./lib/decode.min.js')).BrotliDecode;
+      this.BrotliDecode = (await (globalThis.importProxy ?? (m => import(m)))('./lib/decode.min.js')).BrotliDecode;
     }
 
     // Workaround for https://github.com/dotnet/aspnetcore/issues/54358
     // Import dotnet to change the environment and boot resource loader
-    const { dotnet } = await import(`${this.Url}framework/dotnet.js`);
+    const { dotnet } = await (globalThis.importProxy ?? (m => import(m)))(`${this.Url}framework/dotnet.js`);
 
     if (this.Config.EnvironmentName && !blazorStartOptions.environment) {
       blazorStartOptions.environment = this.Config.EnvironmentName;
@@ -69,7 +70,7 @@ class BrowserExtension {
         delete globalThis.__wasmmodulecallback__;
       } else if (scriptElement.src) {
         const src = this._getUrl(scriptElement.src);
-        await import(src);
+        await (globalThis.importProxy ?? (m => import(m)))(src);
       } else {
         console.error("Unknown script requested", element);
         throw new Error("Unknown script requested");
@@ -85,7 +86,7 @@ class BrowserExtension {
   }
 
   async ImportAsync(script) {
-    await import(`${this.Url}${script}`);
+    await (globalThis.importProxy ?? (m => import(m)))(`${this.Url}${script}`);
   }
 
   _getUrl(path) {
@@ -144,8 +145,8 @@ class BrowserExtension {
     return defaultUri;
   }
 
-  _getBrowserExtensionMode() {
-    return this.Mode;
+  _getBrowserExtensionEnvironment() {
+    return `${this.Mode}|${this.Url}`;
   }
 
   _getBrowserExtensionModeLegacy() {
@@ -158,14 +159,12 @@ class BlazorBrowserExtension {
   StartBlazorBrowserExtension;
   Modes;
   BrowserExtension;
-  ImportJsInitializer;
 
   constructor() {
     this.ImportBrowserPolyfill = true;
     this.StartBlazorBrowserExtension = true;
     this.Modes = null;
     this.BrowserExtension = null;
-    this.ImportJsInitializer = null;
   }
 }
 
@@ -176,13 +175,6 @@ function initializeGlobalVariable(browserExtension) {
   if (!globalThis.hasOwnProperty("BlazorBrowserExtension")) {
     blazorBrowserExtension = new BlazorBrowserExtension();
     blazorBrowserExtension.Modes = BrowserExtensionModes;
-    blazorBrowserExtension.ImportJsInitializer = async (module) => {
-      if (module.startsWith(document.baseURI) && blazorBrowserExtension.BrowserExtension) {
-        // attempt to fix import path
-        module = new URL(module.substring(document.baseURI.length), blazorBrowserExtension.BrowserExtension.Url);
-      }
-      return await import(module);
-    };
     globalThis.BlazorBrowserExtension = blazorBrowserExtension;
   } else {
     blazorBrowserExtension = (globalThis.BlazorBrowserExtension);

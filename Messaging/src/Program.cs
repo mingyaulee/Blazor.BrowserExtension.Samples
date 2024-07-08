@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Messaging.Pages;
+using System.ComponentModel;
 
 namespace Messaging
 {
@@ -20,6 +21,10 @@ namespace Messaging
                 if (browserExtension.Mode == BrowserExtensionMode.ContentScript)
                 {
                     builder.RootComponents.Add<ContentScript>("#Sample_Messaging_app");
+                }
+                else if (browserExtension.Mode == BrowserExtensionMode.Background)
+                {
+                    builder.RootComponents.AddBackgroundWorker<BackgroundWorker>();
                 }
                 else
                 {

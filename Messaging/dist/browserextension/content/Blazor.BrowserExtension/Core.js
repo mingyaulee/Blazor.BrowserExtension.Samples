@@ -7,7 +7,7 @@
     debugMode = true;
   }
 
-  const initializeInternal = (await import('./CoreInternal.js')).initializeInternal;
+  const initializeInternal = (await (globalThis.importProxy ?? (m => import(m)))('./CoreInternal.js')).initializeInternal;
   let url;
   let browserExtensionMode;
   if (!debugMode) {
@@ -33,13 +33,13 @@
   }
 
   if (config.HasAppJs) {
-    await import(`${url}app.js`);
+    await (globalThis.importProxy ?? (m => import(m)))(`${url}app.js`);
   }
 
   if (blazorBrowserExtension.ImportBrowserPolyfill) {
     // import browser extension API polyfill
     // @ts-ignore JS is not a module
-    await import('./lib/browser-polyfill.min.js');
+    await (globalThis.importProxy ?? (m => import(m)))('./lib/browser-polyfill.min.js');
   }
 
   if (blazorBrowserExtension.StartBlazorBrowserExtension) {

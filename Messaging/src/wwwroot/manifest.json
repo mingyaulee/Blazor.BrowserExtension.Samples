@@ -7,7 +7,7 @@
     "default_popup": "popup.html"
   },
   "background": {
-    "service_worker": "BackgroundWorker.js",
+    "service_worker": "content/BackgroundWorker.js",
     "type": "module"
   },
   "content_scripts": [
