@@ -1,0 +1,25 @@
+﻿{
+  "manifest_version": 3,
+  "name": "Sidepanel",
+  "description": "Sample for sidepanel.",
+  "version": "0.1",
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "permissions": [
+    "sidePanel",
+    "tabs"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "framework/*",
+        "content/*"
+      ],
+      "matches": [ "<all_urls>" ]
+    }
+  ]
+}

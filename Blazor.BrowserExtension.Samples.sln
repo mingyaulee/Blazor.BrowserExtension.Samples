@@ -20,6 +20,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SidebarUsingIframe", "Sideb
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging", "Messaging\src\Messaging.csproj", "{B96B27E7-BD51-4E5C-8EB1-B877E323B669}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sidepanel", "Sidepanel\src\Sidepanel.csproj", "{7338B6D3-B9B3-423E-B4E7-451591371460}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +44,10 @@ Global
 		{B96B27E7-BD51-4E5C-8EB1-B877E323B669}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B96B27E7-BD51-4E5C-8EB1-B877E323B669}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B96B27E7-BD51-4E5C-8EB1-B877E323B669}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7338B6D3-B9B3-423E-B4E7-451591371460}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7338B6D3-B9B3-423E-B4E7-451591371460}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7338B6D3-B9B3-423E-B4E7-451591371460}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7338B6D3-B9B3-423E-B4E7-451591371460}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

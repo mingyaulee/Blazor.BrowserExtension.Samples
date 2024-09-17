@@ -25,16 +25,21 @@ Each directory contains the source file in `src` and the published files in `dis
 - Content scripts
 - Messaging
 
+### Sidepanel
+![Sidepanel Demo](Sidepanel/Demo.gif)
+- Side panel
+- Tabs API
+
 ## Test the sample projects
 You can compile and load the projects yourself or just load the published files directly in the browser.
 
 ### Google Chrome
-1. Launch the Extensions page ( ⋮ → More tools → Extensions) or navigate to the URL [chrome://extensions/](chrome://extensions/).
+1. Launch the Extensions page ( ⋮ → Extensions → Manage Extensions) or navigate to the URL [chrome://extensions/](chrome://extensions/).
 2. Switch on `Developer mode`.
 3. Click on the `Load unpacked` button, then navigate to `sampleproject\dist` and select the folder `browserextension`.
 
 ### Microsoft Edge
-1. Launch the Extensions page ( ⋮ → Extensions) or navigate to the URL [edge://extensions/](edge://extensions/).
+1. Launch the Extensions page ( ⋮ → Extensions → Manage Extensions) or navigate to the URL [edge://extensions/](edge://extensions/).
 2. Click on the ☰ and switch on `Developer mode`.
 3. Click on the button with the title `Load unpacked`, then navigate to `sampleproject\dist` and select the folder `browserextension`.
 

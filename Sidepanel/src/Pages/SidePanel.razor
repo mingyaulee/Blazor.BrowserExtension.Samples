@@ -1,0 +1,38 @@
+﻿@page "/sidepanel.html"
+@using WebExtensions.Net.Tabs
+@inherits Blazor.BrowserExtension.Pages.BasePage
+
+<div class="text-container">
+    <h1>My Sidepanel</h1>
+    <p>This is a demo of the extension side panel.</p>
+    @if (activeTab is not null)
+    {
+        <p>The current active tab title is @activeTab.Title</p>
+    }
+</div>
+
+@code {
+    Tab activeTab = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        WebExtensions.Tabs.OnActivated.AddListener(OnTabChanged);
+        activeTab = (await WebExtensions.Tabs.Query(new()
+            {
+                Active = true,
+                CurrentWindow = true
+            })).FirstOrDefault();
+    }
+
+    void OnTabChanged(ActiveInfo activeTabInfo)
+    {
+        _ = OnTabChangedAsync(activeTabInfo);
+    }
+
+    async Task OnTabChangedAsync(ActiveInfo activeTabInfo)
+    {
+        activeTab = await WebExtensions.Tabs.Get(activeTabInfo.TabId);
+        StateHasChanged();
+    }
+}

@@ -1,0 +1,15 @@
+﻿.text-container {
+    padding: 15px;
+    font-size: 16px;
+    overflow-y: auto;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.collapsed .text-container {
+    display: none;
+}
+
+h1 {
+    font-size: 3em;
+}

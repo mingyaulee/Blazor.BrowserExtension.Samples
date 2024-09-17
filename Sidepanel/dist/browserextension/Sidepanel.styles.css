@@ -1,0 +1,20 @@
+/* /Pages/SidePanel.razor.rz.scp.css */
+.text-container[b-2tj9hahjus] {
+    padding: 15px;
+    font-size: 16px;
+    overflow-y: auto;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.collapsed .text-container[b-2tj9hahjus] {
+    display: none;
+}
+
+h1[b-2tj9hahjus] {
+    font-size: 3em;
+}
+/* /Shared/MainLayout.razor.rz.scp.css */
+body[b-6dxdv60enw] {
+    background-color: #f8f9fa;
+}
