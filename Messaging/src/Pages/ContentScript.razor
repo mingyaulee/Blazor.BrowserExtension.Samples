@@ -20,7 +20,7 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        await WebExtensions.Runtime.OnMessage.AddListener(OnMessage);
+        WebExtensions.Runtime.OnMessage.AddListener(OnMessage);
     }
 
     private bool OnMessage(object message, MessageSender sender, Action<object> sendResponse)

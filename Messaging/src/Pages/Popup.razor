@@ -29,7 +29,7 @@
                 Active = true,
                 CurrentWindow = true
             })).SingleOrDefault()?.Id;
-        await WebExtensions.Runtime.OnMessage.AddListener(OnMessage);
+        WebExtensions.Runtime.OnMessage.AddListener(OnMessage);
     }
 
     private bool OnMessage(object message, MessageSender sender, Action<object> sendResponse)
