@@ -1,15 +1,53 @@
 (async () => {
-  const initializeInternal = (await (globalThis.importProxy ?? (m => import(m)))('./CoreInternal.js')).initializeInternal;
   const url = (globalThis.browser || globalThis.chrome).runtime.getURL("");
+  const initializeInternal = (await (globalThis.importProxy?.bind(null, "content/Blazor.BrowserExtension") ?? (m => import(m)))(`${url}content/Blazor.BrowserExtension/CoreInternal.js`)).initializeInternal;
+  const documentBaseUriWithoutPath = new URL("/", document.baseURI).toString();
 
   const configRequest = await fetch(`${url}content/browserextension.config.json`);
   const config = await configRequest.json();
 
+  if (typeof globalThis.cloneInto === "function") {
+    // In dotnet.js the blazor.boot.json is fetched and the properties in the response JSON object is updated
+    // Firefox requires objects to be cloned into the content script context because fetch is considered priviledged access API
+    // Error: Not allowed to define cross-origin object as property on [Object] or [Array] XrayWrapper
+    const fetchFunction = globalThis.fetch;
+    globalThis.fetch = async (fetchUrl, init) => {
+      if (typeof fetchUrl !== "string" || !(fetchUrl.includes("blazor.boot.json") || fetchUrl.endsWith(".br"))) {
+        return fetchFunction(fetchUrl, init);
+      }
+      const absoluteFetchUrl = new URL(fetchUrl, url);
+      const response = await fetchFunction(absoluteFetchUrl, init);
+      const proxyHandler = {
+        get(target, prop) {
+          if (prop === "json") {
+            return async () => {
+              const json = await response.json();
+              return globalThis.cloneInto(json, globalThis);
+            };
+          } else if (prop === "arrayBuffer") {
+            return async () => {
+              const arrayBuffer = await response.arrayBuffer();
+              return globalThis.cloneInto(arrayBuffer, globalThis);
+            };
+          }
+
+          return target[prop];
+        }
+      };
+
+      return new Proxy(response, proxyHandler);
+    };
+  }
+
   const blazorBrowserExtension = initializeInternal(config, url, "ContentScript");
 
-  globalThis.importProxy = (module) => {
-    if (module.startsWith(document.baseURI) && blazorBrowserExtension.BrowserExtension) {
-      module = new URL(module.substring(document.baseURI.length), blazorBrowserExtension.BrowserExtension.Url);
+  globalThis.importProxy = (requestorRelativePath, module) => {
+    if (module.startsWith(document.baseURI)) {
+      module = new URL(module.substring(document.baseURI.length), url);
+    } else if (module.startsWith(documentBaseUriWithoutPath)) {
+      module = new URL(module.substring(documentBaseUriWithoutPath.length), url);
+    } else if (module.startsWith(".")) {
+      module = new URL(`${requestorRelativePath}/${module}`, url);
     }
 
     return import(module);

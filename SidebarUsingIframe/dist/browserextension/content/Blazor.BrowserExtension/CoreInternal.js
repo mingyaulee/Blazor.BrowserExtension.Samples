@@ -13,17 +13,14 @@ class BrowserExtension {
   }
 
   async InitializeCoreAsync(blazorStartOptions) {
-    // import JsBind.Net JS
-    await (globalThis.importProxy ?? (m => import(m)))(`${this.Url}content/JsBind.Net/JsBindNet.js`);
-
     if (this.Config.CompressionEnabled) {
       // import brotli decode.js
-      this.BrotliDecode = (await (globalThis.importProxy ?? (m => import(m)))('./lib/decode.min.js')).BrotliDecode;
+      this.BrotliDecode = (await (globalThis.importProxy?.bind(null, "content/Blazor.BrowserExtension") ?? (m => import(m)))('./lib/decode.min.js')).BrotliDecode;
     }
 
     // Workaround for https://github.com/dotnet/aspnetcore/issues/54358
     // Import dotnet to change the environment and boot resource loader
-    const { dotnet } = await (globalThis.importProxy ?? (m => import(m)))(`${this.Url}framework/dotnet.js`);
+    const { dotnet } = await (globalThis.importProxy?.bind(null, "content/Blazor.BrowserExtension") ?? (m => import(m)))(`${this.Url}framework/dotnet.js`);
 
     if (this.Config.EnvironmentName && !blazorStartOptions.environment) {
       blazorStartOptions.environment = this.Config.EnvironmentName;
@@ -65,12 +62,12 @@ class BrowserExtension {
   async AppendElementToDocumentAsync(element) {
     if (element.tagName === "SCRIPT") {
       const scriptElement = (element);
-      if (scriptElement.text.indexOf("__wasmmodulecallback__") > -1) {
+      if (scriptElement.text.includes("__wasmmodulecallback__")) {
         globalThis.__wasmmodulecallback__();
         delete globalThis.__wasmmodulecallback__;
       } else if (scriptElement.src) {
         const src = this._getUrl(scriptElement.src);
-        await (globalThis.importProxy ?? (m => import(m)))(src);
+        await (globalThis.importProxy?.bind(null, "content/Blazor.BrowserExtension") ?? (m => import(m)))(src);
       } else {
         console.error("Unknown script requested", element);
         throw new Error("Unknown script requested");
@@ -86,11 +83,11 @@ class BrowserExtension {
   }
 
   async ImportAsync(script) {
-    await (globalThis.importProxy ?? (m => import(m)))(`${this.Url}${script}`);
+    await (globalThis.importProxy?.bind(null, "content/Blazor.BrowserExtension") ?? (m => import(m)))(`${this.Url}${script}`);
   }
 
   _getUrl(path) {
-    return path.indexOf("://") > -1 ? path : this.Url + path;
+    return path.includes("://") ? path : this.Url + path;
   }
 
   async _appendElementToDocumentAsync(element) {
@@ -124,7 +121,7 @@ class BrowserExtension {
   }
 
   _loadBootResource(resourceType, resourceName, defaultUri, _integrity) {
-    if (resourceType === "dotnetjs" || resourceType === "manifest") {
+    if (resourceType === "dotnetjs" || resourceType === "manifest" || resourceType === "configuration") {
       return `${this.Url}framework/${resourceName}`;
     }
 
@@ -155,29 +152,25 @@ class BrowserExtension {
 }
 
 class BlazorBrowserExtension {
-  ImportBrowserPolyfill;
-  StartBlazorBrowserExtension;
-  Modes;
-  BrowserExtension;
+  ImportBrowserPolyfill = true;
 
-  constructor() {
-    this.ImportBrowserPolyfill = true;
-    this.StartBlazorBrowserExtension = true;
-    this.Modes = null;
-    this.BrowserExtension = null;
-  }
+  StartBlazorBrowserExtension = true;
+
+  Modes = null;
+
+  BrowserExtension = null;
 }
 
 function initializeGlobalVariable(browserExtension) {
   let blazorBrowserExtension;
 
   // initialize global property BlazorBrowserExtension
-  if (!globalThis.hasOwnProperty("BlazorBrowserExtension")) {
+  if (globalThis.hasOwnProperty("BlazorBrowserExtension")) {
+    blazorBrowserExtension = (globalThis.BlazorBrowserExtension);
+  } else {
     blazorBrowserExtension = new BlazorBrowserExtension();
     blazorBrowserExtension.Modes = BrowserExtensionModes;
     globalThis.BlazorBrowserExtension = blazorBrowserExtension;
-  } else {
-    blazorBrowserExtension = (globalThis.BlazorBrowserExtension);
   }
 
   if (blazorBrowserExtension.BrowserExtension) {

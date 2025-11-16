@@ -3,15 +3,15 @@ import * as s0 from "/framework/dotnet.js";
 import * as s1 from "/framework/dotnet.native.js";
 import * as s2 from "/framework/dotnet.runtime.js";
 import * as s3 from "/framework/blazor.webassembly.js";
-import * as s4 from "/content/Blazor.BrowserExtension/BackgroundWorkerRunner.js";
-import * as s5 from "/content/Blazor.BrowserExtension/Blazor.BrowserExtension.lib.module.js";
-import * as s6 from "/content/Blazor.BrowserExtension/CoreInternal.js";
-import * as s7 from "/content/Blazor.BrowserExtension/lib/browser-polyfill.min.js";
-import * as s8 from "/content/Blazor.BrowserExtension/lib/decode.min.js";
-import * as s9 from "/content/JsBind.Net/JsBindNet.js";
+import * as s4 from "/content/JsBind.Net/JsBind.Net.lib.module.js";
+import * as s5 from "/content/Blazor.BrowserExtension/BackgroundWorkerRunner.js";
+import * as s6 from "/content/Blazor.BrowserExtension/Blazor.BrowserExtension.lib.module.js";
+import * as s7 from "/content/Blazor.BrowserExtension/CoreInternal.js";
+import * as s8 from "/content/Blazor.BrowserExtension/lib/browser-polyfill.min.js";
+import * as s9 from "/content/Blazor.BrowserExtension/lib/decode.min.js";
 import * as s10 from "/app.js";
 
-const allImports = [["framework/dotnet.js", s0], ["framework/dotnet.native.js", s1], ["framework/dotnet.runtime.js", s2], ["framework/blazor.webassembly.js", s3], ["content/Blazor.BrowserExtension/BackgroundWorkerRunner.js", s4], ["content/Blazor.BrowserExtension/Blazor.BrowserExtension.lib.module.js", s5], ["content/Blazor.BrowserExtension/CoreInternal.js", s6], ["content/Blazor.BrowserExtension/lib/browser-polyfill.min.js", s7], ["content/Blazor.BrowserExtension/lib/decode.min.js", s8], ["content/JsBind.Net/JsBindNet.js", s9], ["app.js", s10]];
+const allImports = [["framework/dotnet.js", s0], ["framework/dotnet.native.js", s1], ["framework/dotnet.runtime.js", s2], ["framework/blazor.webassembly.js", s3], ["content/JsBind.Net/JsBind.Net.lib.module.js", s4], ["content/Blazor.BrowserExtension/BackgroundWorkerRunner.js", s5], ["content/Blazor.BrowserExtension/Blazor.BrowserExtension.lib.module.js", s6], ["content/Blazor.BrowserExtension/CoreInternal.js", s7], ["content/Blazor.BrowserExtension/lib/browser-polyfill.min.js", s8], ["content/Blazor.BrowserExtension/lib/decode.min.js", s9], ["app.js", s10]];
 
 const importModule = (requestedModulePath) => {
   let candidateModule;
@@ -31,7 +31,7 @@ const importModule = (requestedModulePath) => {
   return {};
 }
 
-globalThis.importProxy = (module) => Promise.resolve(importModule(module));
+globalThis.importProxy = (requestorRelativePath, module) => Promise.resolve(importModule(module));
 for (const importRequest of importRequested) {
   importRequest.resolve(importModule(importRequest.module));
 }

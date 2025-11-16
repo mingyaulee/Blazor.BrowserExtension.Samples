@@ -8,12 +8,12 @@ if (!hasExtensionsApi("browser") && !hasExtensionsApi("chrome")) {
 
 let url;
 let browserExtensionMode;
-if (!debugMode) {
-  url = (globalThis.browser || globalThis.chrome).runtime.getURL("");
-  browserExtensionMode = "Standard";
-} else {
+if (debugMode) {
   url = globalThis.location.origin + "/";
   browserExtensionMode = "Debug";
+} else {
+  url = (globalThis.browser || globalThis.chrome).runtime.getURL("");
+  browserExtensionMode = "Standard";
 }
 
 let config;
@@ -32,13 +32,13 @@ async function beforeStart(options, extensions) {
   }
 
   if (config.HasAppJs) {
-    appJs = await (globalThis.importProxy ?? (m => import(m)))(`${url}app.js`);
+    appJs = await (globalThis.importProxy?.bind(null, "content/Blazor.BrowserExtension") ?? (m => import(m)))(`${url}app.js`);
   }
 
   if (blazorBrowserExtension.ImportBrowserPolyfill) {
     // import browser extension API polyfill
     // @ts-ignore JS is not a module
-    await (globalThis.importProxy ?? (m => import(m)))('./lib/browser-polyfill.min.js');
+    await (globalThis.importProxy?.bind(null, "content/Blazor.BrowserExtension") ?? (m => import(m)))('./lib/browser-polyfill.min.js');
   }
 
   await blazorBrowserExtension.BrowserExtension.InitializeCoreAsync(options);

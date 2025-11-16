@@ -1,6 +1,6 @@
 (async function () {
   // @ts-ignore JS is not a module
-  await (globalThis.importProxy ?? (m => import(m)))("./content/Blazor.BrowserExtension/lib/browser-polyfill.min.js");
+  await (globalThis.importProxy?.bind(null, "") ?? (m => import(m)))("./content/Blazor.BrowserExtension/lib/browser-polyfill.min.js");
 
   // Define a unique ID to know you are interacting with your own extension
   const extensionAppId = "abc";

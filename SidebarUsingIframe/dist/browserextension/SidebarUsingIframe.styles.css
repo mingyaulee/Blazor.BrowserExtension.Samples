@@ -1,3 +1,7 @@
+/* /Layout/MainLayout.razor.rz.scp.css */
+body[b-uumtl2sp9f] {
+    background-color: #f8f9fa;
+}
 /* /Pages/ContentScript.razor.rz.scp.css */
 .sidebar-container[b-3khj6uxxws] {
     position: absolute;
@@ -53,8 +57,4 @@
 
 h1[b-3khj6uxxws] {
     font-size: 3em;
-}
-/* /Shared/MainLayout.razor.rz.scp.css */
-body[b-il5n7ee7mk] {
-    background-color: #f8f9fa;
 }

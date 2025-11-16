@@ -6,6 +6,7 @@
     <File Path="Directory.Packages.props" />
     <File Path="LICENSE" />
     <File Path="README.md" />
+    <File Path="RebuildAll.ps1" />
   </Folder>
   <Project Path="Messaging/src/Messaging.csproj" />
   <Project Path="NewTabPage/src/NewTabPage.csproj" />

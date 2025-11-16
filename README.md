@@ -46,6 +46,7 @@ You can compile and load the projects yourself or just load the published files 
 ### Mozilla Firefox
 1. Navigate to the URL [about:debugging#/runtime/this-firefox](about:debugging#/runtime/this-firefox).
 2. Click on `Load Temporary Add-on...`, then navigate to `sampleproject\dist\browserextension` and select any file in the directory.
+> For any extension with `background` key in manifest.json, you need to change the value from `"service_worker": "content/BackgroundWorker.js"` to `"scripts": ["content/BackgroundWorker.js"]`
 
 ## Sample extensions without Blazor
 There are plenty of sample extensions provided by Google and Mozilla which is based on JavaScript, HTML and CSS, all of which can be ported to Razor HTML and Blazor scoped CSS.
